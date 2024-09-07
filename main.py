@@ -1,3 +1,4 @@
+import json
 class Producto:
     def __init__(self, nombre, precio, stock):
         self.nombre = nombre
@@ -40,14 +41,38 @@ class Pedido:
         return True
 
 class SistemaPOS:
-    def __init__(self):
-        self.productos = []
+    def __init__(self, archivo_datos="datos.json"):
+        self.archivo_datos = archivo_datos
         self.clientes = []
+        self.productos = []
         self.ingresos_diarios = 0.0
+        self.cargar_datos()
 
+    def cargar_datos(self):
+            try:
+                with open(self.archivo_datos, "r") as archivo:
+                    datos = json.load(archivo)
+                    self.productos = [Producto(p['nombre'], p['precio'], p['stock']) for p in datos.get('productos', [])]
+                    self.clientes = [Cliente(c['nombre']) for c in datos.get('clientes', [])]
+                    self.ingresos_diarios = datos.get('ingresos_diarios', 0.0)
+            except FileNotFoundError:
+                print("No se encontró el archivo de datos. Iniciando con datos vacíos.")
+            except json.JSONDecodeError:
+                print("Error al leer el archivo JSON. Iniciando con datos vacíos.")
+
+    def guardar_datos(self):
+            datos = {
+                'productos': [{'nombre': p.nombre, 'precio': p.precio, 'stock': p.stock} for p in self.productos],
+                'clientes': [{'nombre': c.nombre} for c in self.clientes],
+                'ingresos_diarios': self.ingresos_diarios
+            }
+            with open(self.archivo_datos, "w") as archivo:
+                json.dump(datos, archivo, indent=4)
     def agregar_producto(self, nombre, precio, stock):
         producto = Producto(nombre, precio, stock)
         self.productos.append(producto)
+        self.guardar_datos()
+
 
     def mostrar_menu(self):
         print("Menú de productos:")
@@ -118,6 +143,7 @@ class SistemaPOS:
             cliente.agregar_pedido(pedido)
             self.ingresos_diarios += pedido.total
             print(f"Venta procesada exitosamente para {cliente_nombre}. Total: ${pedido.total:.2f}")
+        self.guardar_datos()
 
     def generar_informe(self):
         print(f"Ingresos diarios: ${self.ingresos_diarios:.2f}")

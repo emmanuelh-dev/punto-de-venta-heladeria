@@ -1,0 +1,21 @@
+{
+    "productos": [
+        {
+            "nombre": "Helado Chocolate",
+            "precio": 25.0,
+            "stock": 20
+        },
+        {
+            "nombre": "Helado Vainilla",
+            "precio": 20.0,
+            "stock": 15
+        },
+        {
+            "nombre": "Agua Fresa/Kiwi",
+            "precio": 18.0,
+            "stock": 10
+        }
+    ],
+    "clientes": [],
+    "ingresos_diarios": 0.0
+}
