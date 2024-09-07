@@ -153,9 +153,6 @@ class SistemaPOS:
 
 def main():
     sistema = SistemaPOS()
-    sistema.agregar_producto("Helado Chocolate", 25.0, 20)
-    sistema.agregar_producto("Helado Vainilla", 20.0, 15)
-    sistema.agregar_producto("Agua Fresa/Kiwi", 18.0, 10)
     while True:
         print("\n--- Sistema POS Heladería/Postres ---")
         print("1. Agregar producto")
